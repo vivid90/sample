@@ -1,0 +1,38 @@
+server:
+  port: 8090 # 서버 포트
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/testdb?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: testuser
+    password: testpass
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update # 개발 초반엔 스키마 자동 생성/업데이트
+    show-sql: true # 쿼리 콘솔 출력
+    properties:
+      hibernate:
+        format_sql: true # 쿼리 이쁘게 출력
+
+  # (선택) 한글 깨짐 방지
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+
+jwt:
+  secret: V293cmxkSGVsbG9Eb2N1bWVudFBhc3N3b3JkMTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTIzNDU2Nzg5MAo= # Base64 인코딩된 충분히 긴 시크릿 키
+  expiration-ms: 3600000 # 토큰 만료 시간 (예: 1시간)
+
+# log level debug
+logging:
+  level:
+    org.springframework.web: debug
+    org.hibernate.SQL: debug
+    org.hibernate.type.descriptor.sql.BasicBinder: trace
+
+app:
+  security:
+    api-key-header: "X-API-Key"
