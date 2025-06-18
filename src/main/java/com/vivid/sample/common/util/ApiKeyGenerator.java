@@ -1,4 +1,4 @@
-package com.vivid.sample.util;
+package com.vivid.sample.common.util;
 
 import java.security.SecureRandom;
 import java.util.Base64;

@@ -24,7 +24,7 @@ public class AuditLog extends BaseTimeEntity {
     private String httpMethod; // HTTP 메소드
 
     @Lob // 파라미터가 길 수 있으므로 LOB 타입 사용 고려
-    @Column
+    @Column(columnDefinition = "TEXT") // 또는 "LONGTEXT" 등 필요에 따라
     private String parameters; // 요청 파라미터 (필터링된)
 
     @Column

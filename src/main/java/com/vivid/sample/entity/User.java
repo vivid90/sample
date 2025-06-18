@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Table(name = "users")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User implements UserDetails {
+public class User extends BaseTimeEntity implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,6 +27,8 @@ public class User implements UserDetails {
 
     @Column(nullable = false)
     private String password;
+
+    private String email;
 
     @Column
     private String roles; // 예: "ROLE_USER,ROLE_ADMIN"

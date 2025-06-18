@@ -6,6 +6,7 @@ import com.vivid.sample.annotation.AuditAction;
 import com.vivid.sample.entity.AuditLog;
 import com.vivid.sample.repository.AuditLogRepository;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
@@ -21,7 +22,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.io.Writer;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -149,8 +155,27 @@ public class AuditLogAspect {
                 return obj.toString();
             }
         } else {
-            // DTO나 Map이 아닌 경우 (String, Long, Integer 등 기본 타입 또는 처리 불가능한 객체)
-            // 원본 객체를 그대로 반환하여 Jackson이 JSON으로 변환하도록 위임
+            // Servlet API 객체, IO Stream, MultipartFile 등 직접 직렬화가 어렵거나 불필요한 타입 처리
+            if (obj instanceof HttpServletRequest ||
+                    obj instanceof HttpServletResponse || // jakarta.servlet.http.HttpServletResponse
+                    obj instanceof MultipartFile ||
+                    obj instanceof InputStream ||
+                    obj instanceof OutputStream ||
+                    obj instanceof Reader ||
+                    obj instanceof Writer ||
+                    obj instanceof org.springframework.ui.Model ||
+                    obj instanceof org.springframework.validation.Errors ||
+                    obj instanceof java.security.Principal ||
+                    obj instanceof org.springframework.security.core.Authentication ||
+                    (obj.getClass().getPackage() != null && (
+                            obj.getClass().getPackage().getName().startsWith("org.apache.catalina") ||
+                                    obj.getClass().getPackage().getName().startsWith("org.springframework.security.web") ||
+                                    obj.getClass().getPackage().getName().startsWith("jakarta.servlet")
+                    ))
+            ) {
+                return "Instance of " + obj.getClass().getName(); // 클래스 이름으로 대체
+            }
+            // 그 외 (String, Long, Integer, Boolean 등 Jackson이 처리할 수 있는 객체)
             return obj;
         }
     }

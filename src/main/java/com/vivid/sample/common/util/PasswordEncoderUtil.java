@@ -1,4 +1,4 @@
-package com.vivid.sample.util;
+package com.vivid.sample.common.util;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,8 +14,5 @@ public class PasswordEncoderUtil {
 
         System.out.println("Raw Password: " + rawPassword);
         System.out.println("Encoded Password (BCrypt with prefix): " + prefixedEncodedPassword);
-
-        // 생성된 접두사가 포함된 해시 값을 SQL INSERT 문에 사용하세요.
-        // 예: INSERT INTO users (username, password, roles) VALUES ('testuser', '{prefixedEncodedPassword}', 'ROLE_USER');
     }
 }

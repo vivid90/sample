@@ -3,10 +3,14 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/testdb?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-    username: testuser
-    password: testpass
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  h2:
+    console:
+      enabled: true # H2 콘솔 활성화
+      path: /h2-console # H2 콘솔 접속 경로
 
   jpa:
     hibernate:
@@ -15,6 +19,7 @@ spring:
     properties:
       hibernate:
         format_sql: true # 쿼리 이쁘게 출력
+    defer-datasource-initialization: true # Hibernate 초기화 후 data.sql 실행
 
   # (선택) 한글 깨짐 방지
   servlet:
@@ -25,6 +30,7 @@ spring:
 jwt:
   secret: V293cmxkSGVsbG9Eb2N1bWVudFBhc3N3b3JkMTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTIzNDU2Nzg5MAo= # Base64 인코딩된 충분히 긴 시크릿 키
   expiration-ms: 3600000 # 토큰 만료 시간 (예: 1시간)
+  refresh-token-expiration-ms: 604800000 # 7 days for Refresh Token
 
 # log level debug
 logging:
@@ -36,3 +42,7 @@ logging:
 app:
   security:
     api-key-header: "X-API-Key"
+    refresh-token-cookie-name: "refreshToken"
+    cookie:
+      secure: false # HTTPS 환경에서는 true, HTTP 개발 환경에서는 false
+      same-site: "Lax" # SameSite 정책 설정
